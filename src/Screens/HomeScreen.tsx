@@ -1,4 +1,5 @@
 import {
+  FlatList,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -19,6 +20,7 @@ import {
 } from '../theme/theme';
 import HeaderBar from '../Components/HeaderrBar';
 import {SearchIcon} from '../Components/CustomIcons';
+import CoffeeCard from '../Components/CoffeeCard';
 
 const getCategories = (data: any) => {
   let temp: any = {};
@@ -129,6 +131,35 @@ const HomeScreen = () => {
             </View>
           ))}
         </ScrollView>
+        {/* Coffe List */}
+
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={sortedCoffee}
+          contentContainerStyle={styles.flatList}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => {
+            return (
+              <TouchableOpacity>
+                <CoffeeCard
+                  id={item.id}
+                  index={item.index}
+                  type={item.type}
+                  rosted={item.rosted}
+                  imageLink={item.imagelink_square}
+                  name={item.name}
+                  specialIngredient={item.special_ingredient}
+                  avg_rating={item.average_rating}
+                  price={item.prices[2]}
+                  buttonPressHandler={() => {}}
+                />
+              </TouchableOpacity>
+            );
+          }}
+        />
+
+        {/* Brans List */}
       </ScrollView>
     </View>
   );
@@ -189,5 +220,10 @@ const styles = StyleSheet.create({
     width: SPACING.space_10,
     borderRadius: BORDERRADIUS.radius_10,
     backgroundColor: COLORS.primaryOrangeHex,
+  },
+  flatList: {
+    gap: SPACING.space_20,
+    paddingVertical: SPACING.space_20,
+    paddingHorizontal: SPACING.space_30,
   },
 });
