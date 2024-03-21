@@ -10,7 +10,13 @@ import {
 } from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {BORDERRADIUS, COLORS, FONTSIZE, SPACING} from '../theme/theme';
+import {
+  BORDERRADIUS,
+  COLORS,
+  FONTFAMILY,
+  FONTSIZE,
+  SPACING,
+} from '../theme/theme';
 import {StarIcon} from './CustomIcons';
 import BGbutton from './BGbutton';
 
@@ -52,19 +58,19 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
         resizeMode="cover">
         <View style={styles.CardRatingContainer}>
           <StarIcon
-            height={FONTSIZE.size_18}
-            width={FONTSIZE.size_18}
+            height={FONTSIZE.size_16}
+            width={FONTSIZE.size_16}
             color={COLORS.primaryOrangeHex}
           />
           <Text style={styles.CardRatingText}>{avg_rating}</Text>
         </View>
       </ImageBackground>
-      <Text>{name}</Text>
-      <Text>{specialIngredient}</Text>
+      <Text style={styles.cardTitle}>{name}</Text>
+      <Text style={styles.cardSubTitle}>{specialIngredient}</Text>
 
-      <View>
-        <Text>
-          $ <Text>{price.price}</Text>
+      <View style={styles.cardFooter}>
+        <Text style={styles.cardCurrency}>
+          $ <Text style={styles.cardPrice}>{price.price}</Text>
         </Text>
 
         <TouchableOpacity>
@@ -83,7 +89,10 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
 export default CoffeeCard;
 
 const styles = StyleSheet.create({
-  CardLinerGrad: {},
+  CardLinerGrad: {
+    padding: SPACING.space_15,
+    borderRadius: BORDERRADIUS.radius_25,
+  },
   cardImageBack: {
     width: CARD_WIDTH,
     height: CARD_WIDTH,
@@ -91,6 +100,48 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.space_15,
     overflow: 'hidden',
   },
-  CardRatingContainer: {},
-  CardRatingText: {},
+  CardRatingContainer: {
+    flexDirection: 'row',
+    backgroundColor: COLORS.primaryBlackRGBA,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.space_15,
+    paddingHorizontal: SPACING.space_10,
+    position: 'absolute',
+    borderBottomLeftRadius: BORDERRADIUS.radius_20,
+    borderTopRightRadius: BORDERRADIUS.radius_20,
+    top: 0,
+    right: 0,
+  },
+  CardRatingText: {
+    fontFamily: FONTFAMILY.poppins_medium,
+    color: COLORS.primaryWhiteHex,
+    lineHeight: 22,
+    fontSize: FONTSIZE.size_14,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: SPACING.space_15,
+  },
+  cardTitle: {
+    fontFamily: FONTFAMILY.poppins_medium,
+    color: COLORS.primaryWhiteHex,
+
+    fontSize: FONTSIZE.size_16,
+  },
+  cardSubTitle: {
+    fontFamily: FONTFAMILY.poppins_light,
+    color: COLORS.primaryWhiteHex,
+
+    fontSize: FONTSIZE.size_10,
+  },
+  cardCurrency: {
+    fontFamily: FONTFAMILY.poppins_semibold,
+    color: COLORS.primaryOrangeHex,
+
+    fontSize: FONTSIZE.size_18,
+  },
+  cardPrice: {color: COLORS.primaryWhiteHex},
 });
