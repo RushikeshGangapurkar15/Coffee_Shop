@@ -22,7 +22,6 @@ export const useStore = create(
               if (state.CartList[i].id == cartItem.id) {
                 found = true;
                 let size = false;
-
                 for (let j = 0; j < state.CartList[i].prices.length; j++) {
                   if (
                     state.CartList[i].prices[j].size == cartItem.prices[0].size
@@ -36,39 +35,38 @@ export const useStore = create(
                   state.CartList[i].prices.push(cartItem.prices[0]);
                 }
                 state.CartList[i].prices.sort((a: any, b: any) => {
-                  // s < m < l
                   if (a.size > b.size) {
                     return -1;
-                  } else if (a.size < b.size) {
-                    return 1;
-                  } else {
-                    return 0;
                   }
+                  if (a.size < b.size) {
+                    return 1;
+                  }
+                  return 0;
                 });
                 break;
-              } else {
-                state.CartList.push(cartItem);
               }
+            }
+            if (found == false) {
+              state.CartList.push(cartItem);
             }
           }),
         ),
       calculateCartPrice: () =>
         set(
           produce(state => {
-            let totalPrice = 0;
-
+            let totalprice = 0;
             for (let i = 0; i < state.CartList.length; i++) {
-              let tempPrice = 0;
+              let tempprice = 0;
               for (let j = 0; j < state.CartList[i].prices.length; j++) {
-                tempPrice =
-                  tempPrice +
-                  parseFloat(state.CartList[i].prices[j].prices) *
+                tempprice =
+                  tempprice +
+                  parseFloat(state.CartList[i].prices[j].price) *
                     state.CartList[i].prices[j].quantity;
               }
-              state.CartList[i].ItemPrice = tempPrice.toFixed(2).toString();
-              totalPrice += tempPrice;
+              state.CartList[i].ItemPrice = tempprice.toFixed(2).toString();
+              totalprice = totalprice + tempprice;
             }
-            state.CartPrice = totalPrice.toFixed(2).toString();
+            state.CartPrice = totalprice.toFixed(2).toString();
           }),
         ),
       addToFavorite: (type: string, id: string) =>
@@ -109,7 +107,7 @@ export const useStore = create(
                   break;
                 }
               }
-            } else if (type == 'Beans') {
+            } else if (type == 'Bean') {
               for (let i = 0; i < state.BeanList.length; i++) {
                 if (state.BeanList[i].id == id) {
                   if (state.BeanList[i].favourite == true) {
@@ -126,6 +124,7 @@ export const useStore = create(
                 break;
               }
             }
+
             state.FavoritesList.splice(spliceindex, 1);
           }),
         ),
