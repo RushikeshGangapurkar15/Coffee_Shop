@@ -2,14 +2,15 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, SPACING} from '../theme/theme';
-import {MenuIcon} from './CustomIcons';
+import {BackIcon, HeartIcon, MenuIcon} from './CustomIcons';
 
 interface GradientBGiconProps {
+  name: string;
   color: string;
   size: number;
 }
 
-const GradientBGicon: React.FC<GradientBGiconProps> = ({color, size}) => {
+const GradientBGicon: React.FC<GradientBGiconProps> = ({name, color, size}) => {
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -17,7 +18,15 @@ const GradientBGicon: React.FC<GradientBGiconProps> = ({color, size}) => {
         end={{x: 1, y: 1}}
         colors={[COLORS.primaryGreyHex, COLORS.primaryBlackHex]}
         style={styles.linerGradientBG}>
-        <MenuIcon width={size} height={size} color={color} />
+        {name == 'Menu' && (
+          <MenuIcon width={size} height={size} color={color} />
+        )}
+        {name == 'Back' && (
+          <BackIcon width={size} height={size} color={color} />
+        )}
+        {name == 'Heart' && (
+          <HeartIcon width={size} height={size} color={color} />
+        )}
       </LinearGradient>
     </View>
   );
