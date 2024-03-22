@@ -12,6 +12,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({title}) => {
   return (
     <View style={styles.headerContainer}>
       <GradientBGicon
+        name="Menu"
         color={COLORS.primaryLightGreyHex}
         size={FONTSIZE.size_16}
       />
