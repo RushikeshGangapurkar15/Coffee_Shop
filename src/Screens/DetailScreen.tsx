@@ -49,8 +49,8 @@ const DetailScreen = ({navigation, route}: any) => {
     index,
     name,
     roasted,
-    ImageLink,
-    specialIngredient,
+    imagelink_square,
+    special_ingredient,
     type,
     price,
   }: any) => {
@@ -59,13 +59,12 @@ const DetailScreen = ({navigation, route}: any) => {
       index,
       name,
       roasted,
-      ImageLink,
-      specialIngredient,
+      imagelink_square,
+      special_ingredient,
       type,
       prices: [{...price, quantity: 1}],
     });
-
-    calculateCartPrice();
+    // calculateCartPrice();
     navigation.navigate('Cart');
   };
   return (
@@ -149,10 +148,10 @@ const DetailScreen = ({navigation, route}: any) => {
               index: ItemOfIndex.index,
               name: ItemOfIndex.name,
               roasted: ItemOfIndex.roasted,
-              ImageLink: ItemOfIndex.imagelink_square,
-              specialIngredient: ItemOfIndex.special_ingredient,
+              imagelink_square: ItemOfIndex.imagelink_square,
+              special_ingredient: ItemOfIndex.special_ingredient,
               type: ItemOfIndex.type,
-              prices: price,
+              price: price,
             });
           }}
           buttonTitle="Add To Cart"

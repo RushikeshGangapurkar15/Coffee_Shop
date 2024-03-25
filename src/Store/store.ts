@@ -23,6 +23,8 @@ export const useStore = create(
                 found = true;
                 let size = false;
                 for (let j = 0; j < state.CartList[i].prices.length; j++) {
+                  console.log(cartItem.prices[0]);
+
                   if (
                     state.CartList[i].prices[j].size == cartItem.prices[0].size
                   ) {
@@ -57,6 +59,7 @@ export const useStore = create(
             let totalprice = 0;
             for (let i = 0; i < state.CartList.length; i++) {
               let tempprice = 0;
+              console.log('cartList', state.CartList[i].prices);
               for (let j = 0; j < state.CartList[i].prices.length; j++) {
                 tempprice =
                   tempprice +
