@@ -25,67 +25,75 @@ import {
 
 interface ImageBackgroundInfoProps {
   EnableBackHandler: boolean;
-  ImageLink: ImageProps;
+  imagelink_portrait: ImageProps;
   type: string;
   id: string;
-  favorite: boolean;
+  favourite: boolean;
   name: string;
-  specialIngredient: string;
-  ingredient: string;
-  avg_rating: number;
-  rating: string;
+  special_ingredient: string;
+  ingredients: string;
+  average_rating: number;
+  ratings_count: string;
   roasted: string;
-  backHandler?: any;
-  toggleFavorite: any;
+  BackHandler?: any;
+  ToggleFavourite: any;
 }
 
 const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
   EnableBackHandler,
-  ImageLink,
+  imagelink_portrait,
   type,
   id,
-  favorite,
+  favourite,
   name,
-  specialIngredient,
-  ingredient,
-  avg_rating,
-  rating,
+  special_ingredient,
+  ingredients,
+  average_rating,
+  ratings_count,
   roasted,
-  backHandler,
-  toggleFavorite,
+  BackHandler,
+  ToggleFavourite,
 }) => {
   return (
     <View>
-      <ImageBackground source={ImageLink} style={styles.ItemBackgroundImage}>
+      <ImageBackground
+        source={imagelink_portrait}
+        style={styles.ItemBackgroundImage}>
         {EnableBackHandler ? (
-          <View style={styles.ImageHeaderWithBack}>
-            <TouchableOpacity onPress={() => backHandler()}>
+          <View style={styles.ImageHeaderBarContainerWithBack}>
+            <TouchableOpacity
+              onPress={() => {
+                BackHandler();
+              }}>
               <GradientBGicon
                 name="Back"
                 color={COLORS.primaryLightGreyHex}
                 size={FONTSIZE.size_16}
               />
             </TouchableOpacity>
-
             <TouchableOpacity
-              onPress={() => toggleFavorite(favorite, type, id)}>
+              onPress={() => {
+                ToggleFavourite(favourite, type, id);
+              }}>
               <GradientBGicon
                 name="Heart"
                 color={
-                  favorite ? COLORS.primaryRedHex : COLORS.primaryLightGreyHex
+                  favourite ? COLORS.primaryRedHex : COLORS.primaryLightGreyHex
                 }
                 size={FONTSIZE.size_16}
               />
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={styles.ImageHeaderWithoutBack}>
+          <View style={styles.ImageHeaderBarContainerWithoutBack}>
             <TouchableOpacity
-              onPress={() => toggleFavorite(favorite, type, id)}>
+              onPress={() => {
+                ToggleFavourite(favourite, type, id);
+              }}>
               <GradientBGicon
                 name="Heart"
                 color={
-                  favorite ? COLORS.primaryRedHex : COLORS.primaryLightGreyHex
+                  favourite ? COLORS.primaryRedHex : COLORS.primaryLightGreyHex
                 }
                 size={FONTSIZE.size_16}
               />
@@ -98,11 +106,12 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
             <View style={styles.InfoContainerRow}>
               <View>
                 <Text style={styles.ItemTitleText}>{name}</Text>
-                <Text style={styles.ItemSubtitleText}>{specialIngredient}</Text>
+                <Text style={styles.ItemSubtitleText}>
+                  {special_ingredient}
+                </Text>
               </View>
-
-              <View style={styles.ItemPropertyContainer}>
-                <View style={styles.PropertyFirst}>
+              <View style={styles.ItemPropertiesContainer}>
+                <View style={styles.ProperFirst}>
                   {type == 'Bean' ? (
                     <BeanIcon
                       height={FONTSIZE.size_18}
@@ -130,7 +139,7 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
                     {type}
                   </Text>
                 </View>
-                <View style={[styles.PropertyFirst]}>
+                <View style={styles.ProperFirst}>
                   {type == 'Bean' ? (
                     <LocationIcon
                       height={FONTSIZE.size_16}
@@ -145,17 +154,10 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
                     />
                   )}
 
-                  <Text
-                    style={[
-                      styles.PropertyTextFirst,
-                      {marginTop: SPACING.space_2 + SPACING.space_4},
-                    ]}>
-                    {ingredient}
-                  </Text>
+                  <Text style={styles.PropertyTextLast}>{ingredients}</Text>
                 </View>
               </View>
             </View>
-
             <View style={styles.InfoContainerRow}>
               <View style={styles.RatingContainer}>
                 <StarIcon
@@ -164,10 +166,9 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
                   height={FONTSIZE.size_20}
                 />
 
-                <Text style={styles.RatingText}>{avg_rating} </Text>
-                <Text style={styles.RatingCountText}>({rating}) </Text>
+                <Text style={styles.RatingText}>{average_rating}</Text>
+                <Text style={styles.RatingCountText}>({ratings_count})</Text>
               </View>
-
               <View style={styles.RoastedContainer}>
                 <Text style={styles.RoastedText}>{roasted}</Text>
               </View>
@@ -179,21 +180,19 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
   );
 };
 
-export default ImageBackgroundInfo;
-
 const styles = StyleSheet.create({
   ItemBackgroundImage: {
     width: '100%',
     aspectRatio: 20 / 25,
     justifyContent: 'space-between',
   },
-  ImageHeaderWithBack: {
+  ImageHeaderBarContainerWithBack: {
     padding: SPACING.space_30,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  ImageHeaderWithoutBack: {
+  ImageHeaderBarContainerWithoutBack: {
     padding: SPACING.space_30,
     flexDirection: 'row',
     alignItems: 'center',
@@ -225,12 +224,12 @@ const styles = StyleSheet.create({
     fontSize: FONTSIZE.size_12,
     color: COLORS.primaryWhiteHex,
   },
-  ItemPropertyContainer: {
+  ItemPropertiesContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: SPACING.space_20,
   },
-  PropertyFirst: {
+  ProperFirst: {
     height: 55,
     width: 55,
     borderRadius: BORDERRADIUS.radius_15,
@@ -242,6 +241,12 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.poppins_medium,
     fontSize: FONTSIZE.size_10,
     color: COLORS.primaryWhiteHex,
+  },
+  PropertyTextLast: {
+    fontFamily: FONTFAMILY.poppins_medium,
+    fontSize: FONTSIZE.size_10,
+    color: COLORS.primaryWhiteHex,
+    marginTop: SPACING.space_2 + SPACING.space_4,
   },
   RatingContainer: {
     flexDirection: 'row',
@@ -272,3 +277,5 @@ const styles = StyleSheet.create({
     color: COLORS.primaryWhiteHex,
   },
 });
+
+export default ImageBackgroundInfo;
