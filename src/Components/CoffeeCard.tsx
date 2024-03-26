@@ -26,11 +26,11 @@ interface CoffeeCardProps {
   id: string;
   index: number;
   type: string;
+  roasted: string;
+  imagelink_square: ImageProps;
   name: string;
-  rosted: string;
-  imageLink: ImageProps;
-  specialIngredient: string;
-  avg_rating: number;
+  special_ingredient: string;
+  average_rating: number;
   price: any;
   buttonPressHandler: any;
 }
@@ -38,11 +38,11 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
   id,
   index,
   type,
-  rosted,
-  imageLink,
+  roasted,
+  imagelink_square,
   name,
-  specialIngredient,
-  avg_rating,
+  special_ingredient,
+  average_rating,
   price,
   buttonPressHandler,
 }) => {
@@ -50,11 +50,11 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
     <LinearGradient
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}
-      style={styles.CardLinerGrad}
+      style={styles.CardLinearGradientContainer}
       colors={[COLORS.primaryGreyHex, COLORS.primaryBlackHex]}>
       <ImageBackground
-        source={imageLink}
-        style={styles.cardImageBack}
+        source={imagelink_square}
+        style={styles.CardImageBG}
         resizeMode="cover">
         <View style={styles.CardRatingContainer}>
           <StarIcon
@@ -62,18 +62,28 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
             width={FONTSIZE.size_16}
             color={COLORS.primaryOrangeHex}
           />
-          <Text style={styles.CardRatingText}>{avg_rating}</Text>
+          <Text style={styles.CardRatingText}>{average_rating}</Text>
         </View>
       </ImageBackground>
-      <Text style={styles.cardTitle}>{name}</Text>
-      <Text style={styles.cardSubTitle}>{specialIngredient}</Text>
-
-      <View style={styles.cardFooter}>
-        <Text style={styles.cardCurrency}>
-          $ <Text style={styles.cardPrice}>{price.price}</Text>
+      <Text style={styles.CardTitle}>{name}</Text>
+      <Text style={styles.CardSubtitle}>{special_ingredient}</Text>
+      <View style={styles.CardFooterRow}>
+        <Text style={styles.CardPriceCurrency}>
+          $ <Text style={styles.CardPrice}>{price.price}</Text>
         </Text>
-
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            buttonPressHandler({
+              id,
+              index,
+              type,
+              roasted,
+              imagelink_square,
+              name,
+              special_ingredient,
+              prices: [{...price, quantity: 1}],
+            });
+          }}>
           <BGbutton
             color={COLORS.primaryWhiteHex}
             name={'plus'}
@@ -86,14 +96,12 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
   );
 };
 
-export default CoffeeCard;
-
 const styles = StyleSheet.create({
-  CardLinerGrad: {
+  CardLinearGradientContainer: {
     padding: SPACING.space_15,
     borderRadius: BORDERRADIUS.radius_25,
   },
-  cardImageBack: {
+  CardImageBG: {
     width: CARD_WIDTH,
     height: CARD_WIDTH,
     borderRadius: BORDERRADIUS.radius_20,
@@ -105,8 +113,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primaryBlackRGBA,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: SPACING.space_15,
-    paddingHorizontal: SPACING.space_10,
+    gap: SPACING.space_10,
+    paddingHorizontal: SPACING.space_15,
     position: 'absolute',
     borderBottomLeftRadius: BORDERRADIUS.radius_20,
     borderTopRightRadius: BORDERRADIUS.radius_20,
@@ -119,29 +127,30 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontSize: FONTSIZE.size_14,
   },
-  cardFooter: {
+  CardTitle: {
+    fontFamily: FONTFAMILY.poppins_medium,
+    color: COLORS.primaryWhiteHex,
+    fontSize: FONTSIZE.size_16,
+  },
+  CardSubtitle: {
+    fontFamily: FONTFAMILY.poppins_light,
+    color: COLORS.primaryWhiteHex,
+    fontSize: FONTSIZE.size_10,
+  },
+  CardFooterRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: SPACING.space_15,
   },
-  cardTitle: {
-    fontFamily: FONTFAMILY.poppins_medium,
-    color: COLORS.primaryWhiteHex,
-
-    fontSize: FONTSIZE.size_16,
-  },
-  cardSubTitle: {
-    fontFamily: FONTFAMILY.poppins_light,
-    color: COLORS.primaryWhiteHex,
-
-    fontSize: FONTSIZE.size_10,
-  },
-  cardCurrency: {
+  CardPriceCurrency: {
     fontFamily: FONTFAMILY.poppins_semibold,
     color: COLORS.primaryOrangeHex,
-
     fontSize: FONTSIZE.size_18,
   },
-  cardPrice: {color: COLORS.primaryWhiteHex},
+  CardPrice: {
+    color: COLORS.primaryWhiteHex,
+  },
 });
+
+export default CoffeeCard;

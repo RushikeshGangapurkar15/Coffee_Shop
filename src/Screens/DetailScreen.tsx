@@ -25,32 +25,31 @@ const DetailScreen = ({navigation, route}: any) => {
   const ItemOfIndex = useStore((state: any) =>
     route.params.type == 'Coffee' ? state.CoffeeList : state.BeanList,
   )[route.params.index];
-
-  const backHandler = () => {
-    navigation.pop();
-  };
-
+  const addToFavoriteList = useStore((state: any) => state.addToFavoriteList);
+  const deleteFromFavoriteList = useStore(
+    (state: any) => state.deleteFromFavoriteList,
+  );
   const addToCart = useStore((state: any) => state.addToCart);
   const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
-  const addToFavorite = useStore((state: any) => state.addToFavorite);
-  const deleFromFavorite = useStore((state: any) => state.deleFromFavorite);
-  const toggleFavorite = (favorite: boolean, type: string, id: string) => {
-    // console.log('FAV', favorite);
-    // console.log('Type:', type);
-    // console.log('id', id);
-    favorite ? deleFromFavorite(type, id) : addToFavorite(type, id);
-  };
 
   const [price, setPrice] = useState(ItemOfIndex.prices[0]);
   const [fullDesc, setFullDesc] = useState(false);
 
-  const addToCartHandler = ({
+  const ToggleFavourite = (favourite: boolean, type: string, id: string) => {
+    favourite ? deleteFromFavoriteList(type, id) : addToFavoriteList(type, id);
+  };
+
+  const BackHandler = () => {
+    navigation.pop();
+  };
+
+  const addToCarthandler = ({
     id,
     index,
     name,
     roasted,
-    ImageLink,
-    specialIngredient,
+    imagelink_square,
+    special_ingredient,
     type,
     price,
   }: any) => {
@@ -59,80 +58,87 @@ const DetailScreen = ({navigation, route}: any) => {
       index,
       name,
       roasted,
-      ImageLink,
-      specialIngredient,
+      imagelink_square,
+      special_ingredient,
       type,
       prices: [{...price, quantity: 1}],
     });
-
     calculateCartPrice();
     navigation.navigate('Cart');
   };
+
   return (
-    <View style={styles.screenContainer}>
+    <View style={styles.ScreenContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
-      {/* {console.log(ItemOfIndex)} */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.ScrollViewFlex}>
         <ImageBackgroundInfo
           EnableBackHandler={true}
-          ImageLink={ItemOfIndex.imagelink_portrait}
+          imagelink_portrait={ItemOfIndex.imagelink_portrait}
           type={ItemOfIndex.type}
           id={ItemOfIndex.id}
-          favorite={ItemOfIndex.favourite}
+          favourite={ItemOfIndex.favourite}
           name={ItemOfIndex.name}
-          specialIngredient={ItemOfIndex.special_ingredient}
-          ingredient={ItemOfIndex.ingredients}
-          avg_rating={ItemOfIndex.average_rating}
-          rating={ItemOfIndex.ratings_count}
+          special_ingredient={ItemOfIndex.special_ingredient}
+          ingredients={ItemOfIndex.ingredients}
+          average_rating={ItemOfIndex.average_rating}
+          ratings_count={ItemOfIndex.ratings_count}
           roasted={ItemOfIndex.roasted}
-          backHandler={backHandler}
-          toggleFavorite={toggleFavorite}
+          BackHandler={BackHandler}
+          ToggleFavourite={ToggleFavourite}
         />
 
-        <View style={styles.FooterInfo}>
+        <View style={styles.FooterInfoArea}>
           <Text style={styles.InfoTitle}>Description</Text>
           {fullDesc ? (
-            <TouchableWithoutFeedback onPress={() => setFullDesc(!fullDesc)}>
-              <Text style={styles.description}>{ItemOfIndex.description}</Text>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                setFullDesc(prev => !prev);
+              }}>
+              <Text style={styles.DescriptionText}>
+                {ItemOfIndex.description}
+              </Text>
             </TouchableWithoutFeedback>
           ) : (
-            <TouchableWithoutFeedback onPress={() => setFullDesc(!fullDesc)}>
-              <Text numberOfLines={3} style={styles.description}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                setFullDesc(prev => !prev);
+              }}>
+              <Text numberOfLines={3} style={styles.DescriptionText}>
                 {ItemOfIndex.description}
               </Text>
             </TouchableWithoutFeedback>
           )}
-
           <Text style={styles.InfoTitle}>Size</Text>
-          <View style={styles.sizeOuterContainer}>
+          <View style={styles.SizeOuterContainer}>
             {ItemOfIndex.prices.map((data: any) => (
               <TouchableOpacity
                 key={data.size}
+                onPress={() => {
+                  setPrice(data);
+                }}
                 style={[
-                  styles.sizeBox,
+                  styles.SizeBox,
                   {
                     borderColor:
                       data.size == price.size
                         ? COLORS.primaryOrangeHex
                         : COLORS.primaryDarkGreyHex,
                   },
-                ]}
-                onPress={() => setPrice(data)}>
+                ]}>
                 <Text
                   style={[
                     styles.SizeText,
                     {
                       fontSize:
-                        ItemOfIndex.type == 'bean'
+                        ItemOfIndex.type == 'Bean'
                           ? FONTSIZE.size_14
                           : FONTSIZE.size_16,
-
                       color:
                         data.size == price.size
                           ? COLORS.primaryOrangeHex
-                          : COLORS.primaryLightGreyHex,
+                          : COLORS.secondaryLightGreyHex,
                     },
                   ]}>
                   {data.size}
@@ -143,31 +149,35 @@ const DetailScreen = ({navigation, route}: any) => {
         </View>
         <PaymentFooter
           price={price}
-          buttonHandler={() => {
-            addToCartHandler({
+          buttonTitle="Add to Cart"
+          buttonPressHandler={() => {
+            addToCarthandler({
               id: ItemOfIndex.id,
               index: ItemOfIndex.index,
               name: ItemOfIndex.name,
               roasted: ItemOfIndex.roasted,
-              ImageLink: ItemOfIndex.imagelink_square,
-              specialIngredient: ItemOfIndex.special_ingredient,
+              imagelink_square: ItemOfIndex.imagelink_square,
+              special_ingredient: ItemOfIndex.special_ingredient,
               type: ItemOfIndex.type,
-              prices: price,
+              price: price,
             });
           }}
-          buttonTitle="Add To Cart"
         />
       </ScrollView>
     </View>
   );
 };
 
-export default DetailScreen;
-
 const styles = StyleSheet.create({
-  screenContainer: {flex: 1, backgroundColor: COLORS.primaryBlackHex},
-  ScrollViewFlex: {flexGrow: 1, justifyContent: 'space-between'},
-  FooterInfo: {
+  ScreenContainer: {
+    flex: 1,
+    backgroundColor: COLORS.primaryBlackHex,
+  },
+  ScrollViewFlex: {
+    flexGrow: 1,
+    justifyContent: 'space-between',
+  },
+  FooterInfoArea: {
     padding: SPACING.space_20,
   },
   InfoTitle: {
@@ -176,14 +186,20 @@ const styles = StyleSheet.create({
     color: COLORS.primaryWhiteHex,
     marginBottom: SPACING.space_10,
   },
-  description: {
-    fontFamily: FONTFAMILY.poppins_regular,
+  DescriptionText: {
     letterSpacing: 0.5,
+    fontFamily: FONTFAMILY.poppins_regular,
     fontSize: FONTSIZE.size_14,
     color: COLORS.primaryWhiteHex,
     marginBottom: SPACING.space_30,
   },
-  sizeBox: {
+  SizeOuterContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: SPACING.space_20,
+  },
+  SizeBox: {
     flex: 1,
     backgroundColor: COLORS.primaryDarkGreyHex,
     alignItems: 'center',
@@ -192,13 +208,9 @@ const styles = StyleSheet.create({
     borderRadius: BORDERRADIUS.radius_10,
     borderWidth: 2,
   },
-  sizeOuterContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 20,
-  },
   SizeText: {
     fontFamily: FONTFAMILY.poppins_medium,
   },
 });
+
+export default DetailScreen;

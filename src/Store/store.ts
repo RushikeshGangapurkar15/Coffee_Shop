@@ -13,7 +13,7 @@ export const useStore = create(
       CartPrice: 0,
       FavoritesList: [],
       CartList: [],
-      OrderHistory: [],
+      OrderHistoryList: [],
       addToCart: (cartItem: any) =>
         set(
           produce(state => {
@@ -69,7 +69,7 @@ export const useStore = create(
             state.CartPrice = totalprice.toFixed(2).toString();
           }),
         ),
-      addToFavorite: (type: string, id: string) =>
+      addToFavoriteList: (type: string, id: string) =>
         set(
           produce(state => {
             if (type == 'Coffee') {
@@ -78,6 +78,8 @@ export const useStore = create(
                   if (state.CoffeeList[i].favourite == false) {
                     state.CoffeeList[i].favourite = true;
                     state.FavoritesList.unshift(state.CoffeeList[i]);
+                  } else {
+                    state.CoffeeList[i].favourite = false;
                   }
                   break;
                 }
@@ -88,6 +90,8 @@ export const useStore = create(
                   if (state.BeanList[i].favourite == false) {
                     state.BeanList[i].favourite = true;
                     state.FavoritesList.unshift(state.BeanList[i]);
+                  } else {
+                    state.BeanList[i].favourite = false;
                   }
                   break;
                 }
@@ -95,7 +99,7 @@ export const useStore = create(
             }
           }),
         ),
-      deleFromFavorite: (type: string, id: string) =>
+      deleteFromFavoriteList: (type: string, id: string) =>
         set(
           produce(state => {
             if (type == 'Coffee') {
@@ -103,6 +107,8 @@ export const useStore = create(
                 if (state.CoffeeList[i].id == id) {
                   if (state.CoffeeList[i].favourite == true) {
                     state.CoffeeList[i].favourite = false;
+                  } else {
+                    state.CoffeeList[i].favourite = true;
                   }
                   break;
                 }
@@ -112,20 +118,98 @@ export const useStore = create(
                 if (state.BeanList[i].id == id) {
                   if (state.BeanList[i].favourite == true) {
                     state.BeanList[i].favourite = false;
+                  } else {
+                    state.BeanList[i].favourite = true;
                   }
                   break;
                 }
               }
             }
-            let spliceindex = -1;
+            let spliceIndex = -1;
             for (let i = 0; i < state.FavoritesList.length; i++) {
               if (state.FavoritesList[i].id == id) {
-                spliceindex = i;
+                spliceIndex = i;
                 break;
               }
             }
+            state.FavoritesList.splice(spliceIndex, 1);
+          }),
+        ),
 
-            state.FavoritesList.splice(spliceindex, 1);
+      incrementCartItemQuantity: (id: string, size: string) =>
+        set(
+          produce(state => {
+            for (let i = 0; i < state.CartList.length; i++) {
+              if (state.CartList[i].id == id) {
+                for (let j = 0; j < state.CartList[i].prices.length; j++) {
+                  if (state.CartList[i].prices[j].size == size) {
+                    state.CartList[i].prices[j].quantity++;
+                    break;
+                  }
+                }
+              }
+            }
+          }),
+        ),
+      decrementCartItemQuantity: (id: string, size: string) =>
+        set(
+          produce(state => {
+            for (let i = 0; i < state.CartList.length; i++) {
+              if (state.CartList[i].id == id) {
+                for (let j = 0; j < state.CartList[i].prices.length; j++) {
+                  if (state.CartList[i].prices[j].size == size) {
+                    if (state.CartList[i].prices.length > 1) {
+                      if (state.CartList[i].prices[j].quantity > 1) {
+                        state.CartList[i].prices[j].quantity--;
+                      } else {
+                        state.CartList[i].prices.splice(j, 1);
+                      }
+                    } else {
+                      if (state.CartList[i].prices[j].quantity > 1) {
+                        state.CartList[i].prices[j].quantity--;
+                      } else {
+                        state.CartList.splice(i, 1);
+                      }
+                    }
+                    break;
+                  }
+                }
+              }
+            }
+          }),
+        ),
+
+      addToOrderHistryList: () =>
+        set(
+          produce(state => {
+            let temp = state.CartList.reduce(
+              (accumulator: number, currentValue: any) =>
+                accumulator + parseFloat(currentValue.ItemPrice),
+              0,
+            );
+
+            let currenCartPrice = temp.toFixed(2).toString();
+
+            if (state.OrderHistoryList.length > 0) {
+              state.OrderHistoryList.unshift({
+                OrderDate:
+                  new Date().toDateString() +
+                  ' ' +
+                  new Date().toLocaleTimeString(),
+                CartList: state.CartList,
+                CartListPrice: temp.toFixed(2).toString(),
+              });
+            } else {
+              state.OrderHistoryList.push({
+                OrderDate:
+                  new Date().toDateString() +
+                  ' ' +
+                  new Date().toLocaleTimeString(),
+                CartList: state.CartList,
+                CartListPrice: temp.toFixed(2).toString(),
+              });
+            }
+            state.CartList = [];
           }),
         ),
     }),
