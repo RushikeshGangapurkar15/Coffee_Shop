@@ -138,6 +138,7 @@ const HomeScreen = ({navigation}: any) => {
 
         <View style={styles.InputContainerComponent}>
           <TouchableOpacity
+            style={styles.inputIcon}
             onPress={() => {
               searchCoffee(searchText);
             }}>
@@ -164,6 +165,7 @@ const HomeScreen = ({navigation}: any) => {
           />
           {searchText.length > 0 ? (
             <TouchableOpacity
+              style={[styles.inputIcon, {transform: [{rotate: '45deg'}]}]}
               onPress={() => {
                 resetSearchCoffee();
               }}>
@@ -323,7 +325,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primaryDarkGreyHex,
     alignItems: 'center',
   },
-  InputIcon: {
+  inputIcon: {
     marginHorizontal: SPACING.space_20,
   },
   TextInputContainer: {
