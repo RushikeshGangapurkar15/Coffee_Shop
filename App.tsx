@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 // Navigations
 import {NavigationContainer} from '@react-navigation/native';
@@ -10,10 +10,15 @@ import HomeScreen from './src/Screens/HomeScreen';
 import CartScreen from './src/Screens/CartScreen';
 import DetailScreen from './src/Screens/DetailScreen';
 import PaymentScreen from './src/Screens/PaymentScreen';
+import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
